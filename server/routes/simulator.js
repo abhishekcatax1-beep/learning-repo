@@ -183,6 +183,116 @@ const DSA_PROBLEMS = [
     ],
     solution: `function coinChange(coins, amount) {\n  const dp = new Array(amount + 1).fill(Infinity);\n  dp[0] = 0;\n  for (const coin of coins) {\n    for (let i = coin; i <= amount; i++) {\n      dp[i] = Math.min(dp[i], dp[i - coin] + 1);\n    }\n  }\n  return dp[amount] === Infinity ? -1 : dp[amount];\n}`,
   },
+  {
+    id: "longest-increasing-subsequence",
+    title: "Longest Increasing Subsequence",
+    difficulty: "Medium",
+    category: "DP",
+    description:
+      "Given an integer array nums, return the length of the longest strictly increasing subsequence.",
+    starterCode: `function lengthOfLIS(nums) {
+  // Your code here
+}` ,
+    testCases: [
+      { input: "([10,9,2,5,3,7,101,18])", output: "4" },
+      { input: "([0,1,0,3,2,3])", output: "4" },
+      { input: "([7,7,7,7,7,7,7])", output: "1" },
+    ],
+    solution: `function lengthOfLIS(nums) {
+  const dp = new Array(nums.length).fill(1);
+  let maxLen = 0;
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (nums[j] < nums[i]) dp[i] = Math.max(dp[i], dp[j] + 1);
+    }
+    maxLen = Math.max(maxLen, dp[i]);
+  }
+  return maxLen;
+}` ,
+  },
+  {
+    id: "number-of-islands",
+    title: "Number of Islands",
+    difficulty: "Medium",
+    category: "Graph",
+    description:
+      "Given a 2D grid map of '1's (land) and '0's (water), count the number of islands.",
+    starterCode: `function numIslands(grid) {
+  // Your code here
+}` ,
+    testCases: [
+      {
+        input: "([['1','1','1','1','0'],['1','1','0','1','0'],['1','1','0','0','0'],['0','0','0','0','0']])",
+        output: "1",
+      },
+      {
+        input: "([['1','1','0','0','0'],['1','1','0','0','0'],['0','0','1','0','0'],['0','0','0','1','1']])",
+        output: "3",
+      },
+    ],
+    solution: `function numIslands(grid) {
+  if (!grid || grid.length === 0) return 0;
+  const rows = grid.length;
+  const cols = grid[0].length;
+  let count = 0;
+
+  function dfs(r, c) {
+    if (r < 0 || c < 0 || r >= rows || c >= cols || grid[r][c] !== '1') return;
+    grid[r][c] = '0';
+    dfs(r - 1, c);
+    dfs(r + 1, c);
+    dfs(r, c - 1);
+    dfs(r, c + 1);
+  }
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (grid[r][c] === '1') {
+        count++;
+        dfs(r, c);
+      }
+    }
+  }
+  return count;
+}` ,
+  },
+  {
+    id: "course-schedule",
+    title: "Course Schedule",
+    difficulty: "Medium",
+    category: "Graph",
+    description:
+      "Given numCourses and an array of prerequisite pairs, determine if you can finish all courses.",
+    starterCode: `function canFinish(numCourses, prerequisites) {
+  // Your code here
+}` ,
+    testCases: [
+      { input: "(2, [[1,0]])", output: "true" },
+      { input: "(2, [[1,0],[0,1]])", output: "false" },
+    ],
+    solution: `function canFinish(numCourses, prerequisites) {
+  const graph = Array.from({ length: numCourses }, () => []);
+  const indegree = new Array(numCourses).fill(0);
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+    indegree[course]++;
+  }
+  const queue = [];
+  for (let i = 0; i < numCourses; i++) {
+    if (indegree[i] === 0) queue.push(i);
+  }
+  let visited = 0;
+  while (queue.length) {
+    const node = queue.shift();
+    visited++;
+    for (const next of graph[node]) {
+      indegree[next]--;
+      if (indegree[next] === 0) queue.push(next);
+    }
+  }
+  return visited === numCourses;
+}` ,
+  },
 ];
 
 // Get all problems
